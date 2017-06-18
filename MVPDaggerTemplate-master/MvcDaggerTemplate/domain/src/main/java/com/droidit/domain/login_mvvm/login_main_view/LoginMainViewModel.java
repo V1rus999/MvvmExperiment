@@ -16,12 +16,23 @@ public class LoginMainViewModel implements LoginViewModel {
     @Inject
     public LoginMainViewModel() {
         loginMainState = new LoginMainState(true, false);
-
     }
 
     @Override
     public void attachStateListener(final LoginStateListener<LoginMainState> stateListener) {
         this.stateListener = stateListener;
         stateListener.onStateChange(loginMainState);
+    }
+
+    @Override
+    public void onServerViewDone() {
+        loginMainState.serverViewVisible = false;
+        loginMainState.credentialViewVisible = true;
+        stateListener.onStateChange(loginMainState);
+    }
+
+    @Override
+    public void onCredentialViewDone() {
+
     }
 }

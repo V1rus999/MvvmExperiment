@@ -8,4 +8,7 @@ import com.droidit.domain.login_mvvm.BaseViewModel;
 
 public interface LoginViewModel extends BaseViewModel<LoginMainState> {
 
+    void onServerViewDone();
+
+    void onCredentialViewDone();
 }

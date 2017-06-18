@@ -2,6 +2,8 @@ package com.droidit.mvvmProject.dependencyInjection;
 
 import com.droidit.domain.login_mvvm.credential_server_view.CredentialViewModel;
 import com.droidit.domain.login_mvvm.credential_server_view.LoginCredentialViewModel;
+import com.droidit.domain.login_mvvm.login_main_view.LoginMainViewModel;
+import com.droidit.domain.login_mvvm.login_main_view.LoginViewModel;
 import com.droidit.domain.login_mvvm.login_server_view.LoginServerViewModel;
 import com.droidit.domain.login_mvvm.login_server_view.ServerViewModel;
 
@@ -21,6 +23,11 @@ public class ViewModelModule {
 
     @Provides
     public CredentialViewModel provideCredentialViewModel(final LoginCredentialViewModel loginViewModel) {
+        return loginViewModel;
+    }
+
+    @Provides
+    public LoginViewModel providLoginMainViewModel(final LoginMainViewModel loginViewModel) {
         return loginViewModel;
     }
 }
