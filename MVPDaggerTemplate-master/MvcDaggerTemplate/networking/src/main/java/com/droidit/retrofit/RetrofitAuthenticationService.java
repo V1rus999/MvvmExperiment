@@ -5,6 +5,7 @@ import com.droidit.domain.authentication.AuthService;
 
 import javax.inject.Inject;
 
+import okhttp3.HttpUrl;
 import okhttp3.OkHttpClient;
 import okhttp3.ResponseBody;
 import retrofit2.Call;
@@ -27,8 +28,14 @@ public class RetrofitAuthenticationService implements AuthService {
     }
 
     @Override
-    public void checkUrl(String url, final DefaultCallback<Boolean> callback) {
-        AuthenticationApi authApi = retrofit.baseUrl(url).build().create(AuthenticationApi.class);
+    public void checkUrl(final String url, final DefaultCallback<Boolean> callback) {
+        final HttpUrl httpUrl = HttpUrl.parse(url);
+        if (httpUrl == null) {
+            callback.onFailure(new Throwable("Bad Url"));
+            return;
+        }
+
+        AuthenticationApi authApi = retrofit.baseUrl(httpUrl).build().create(AuthenticationApi.class);
         Call<ResponseBody> call = authApi.getUser("current");
         call.enqueue(new Callback<ResponseBody>() {
             @Override
@@ -49,6 +56,12 @@ public class RetrofitAuthenticationService implements AuthService {
 
     @Override
     public void authenticateUrl(final String url, final String username, final String password, final DefaultCallback<Boolean> callback) {
+        final HttpUrl httpUrl = HttpUrl.parse(url);
+        if (httpUrl == null) {
+            callback.onFailure(new Throwable("Bad Url"));
+            return;
+        }
+
         authenticationInterceptor.addCredentials(username, password);
         AuthenticationApi authApi = retrofit.baseUrl(url)
                 .client(new OkHttpClient.Builder().addInterceptor(authenticationInterceptor).build()).build()

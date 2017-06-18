@@ -74,7 +74,7 @@ public class LoginCredentialViewModel implements CredentialViewModel {
 
     private void switchToNormalState() {
         credentialState.progressBarVisible = false;
-        credentialState.loginButtonText = "Next";
+        credentialState.loginButtonText = "Login";
         credentialState.currentState = NORMAL;
         this.stateListener.onStateChange(credentialState);
     }
