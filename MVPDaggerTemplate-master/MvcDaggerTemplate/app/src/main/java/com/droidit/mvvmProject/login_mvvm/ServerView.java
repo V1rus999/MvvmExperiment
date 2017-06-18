@@ -13,8 +13,9 @@ import android.widget.ProgressBar;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
-import com.droidit.domain.login_mvvm.login_server_view.ServerState;
 import com.droidit.domain.login_mvvm.LoginStateListener;
+import com.droidit.domain.login_mvvm.ViewCompletionListener;
+import com.droidit.domain.login_mvvm.login_server_view.ServerState;
 import com.droidit.domain.login_mvvm.login_server_view.ServerViewModel;
 import com.droidit.mvvmProject.DefaultApplication;
 import com.droidit.mvvmProject.R;
@@ -47,11 +48,7 @@ public class ServerView extends LinearLayout implements LoginStateListener<Serve
     @Inject
     ServerViewModel loginServerViewModel;
 
-    private ServerCompletionListener mListener;
-
-    public interface ServerCompletionListener {
-        void onDone();
-    }
+    private ViewCompletionListener mListener;
 
     public ServerView(Context context, @Nullable AttributeSet attrs) {
         super(context, attrs);
@@ -73,7 +70,7 @@ public class ServerView extends LinearLayout implements LoginStateListener<Serve
         basicExampleComponent.inject(this);
     }
 
-    public void attachServerCompletionListener(final ServerCompletionListener listener) {
+    public void attachServerCompletionListener(final ViewCompletionListener listener) {
         mListener = listener;
     }
 

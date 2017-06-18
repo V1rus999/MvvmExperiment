@@ -2,10 +2,12 @@ package com.droidit.mvvmProject.dependencyInjection;
 
 import android.content.Context;
 
+import com.droidit.domain.login_mvvm.datastore.UserDataStore;
 import com.droidit.domain.threading.BackgroundExecutor;
 import com.droidit.domain.threading.MainThread;
 import com.droidit.mvvmProject.DefaultApplication;
 import com.droidit.mvvmProject.UIThread;
+import com.droidit.mvvmProject.login_mvvm.AndroidUserDataStore;
 
 import java.util.concurrent.Executor;
 
@@ -43,5 +45,11 @@ public class ApplicationModule {
     @Singleton
     MainThread providePostExecutionThread(UIThread uiThread) {
         return uiThread;
+    }
+
+    @Provides
+    @Singleton
+    UserDataStore provideUserDataStore(AndroidUserDataStore androidUserDataStore) {
+        return androidUserDataStore;
     }
 }

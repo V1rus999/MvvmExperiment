@@ -2,6 +2,8 @@ package com.droidit.mvvmProject.dependencyInjection;
 
 import android.content.Context;
 
+import com.droidit.domain.login_mvvm.datastore.UserDataStore;
+
 import javax.inject.Singleton;
 
 import dagger.Component;
@@ -15,5 +17,7 @@ import dagger.Component;
 public interface ApplicationComponent {
 
     Context context();
+
+    UserDataStore userDataStore();
 
 }

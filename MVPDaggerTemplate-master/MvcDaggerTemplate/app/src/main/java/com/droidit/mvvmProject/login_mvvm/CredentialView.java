@@ -14,6 +14,7 @@ import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import com.droidit.domain.login_mvvm.LoginStateListener;
+import com.droidit.domain.login_mvvm.ViewCompletionListener;
 import com.droidit.domain.login_mvvm.credential_server_view.CredentialState;
 import com.droidit.domain.login_mvvm.credential_server_view.CredentialViewModel;
 import com.droidit.mvvmProject.DefaultApplication;
@@ -49,6 +50,7 @@ public class CredentialView extends LinearLayout implements LoginStateListener<C
     @Inject
     CredentialViewModel credentialViewModel;
 
+    private ViewCompletionListener completionListener;
 
     public CredentialView(Context context, @Nullable AttributeSet attrs) {
         super(context, attrs);
@@ -70,6 +72,10 @@ public class CredentialView extends LinearLayout implements LoginStateListener<C
         basicExampleComponent.inject(this);
     }
 
+    public void attachCompletionListener(final ViewCompletionListener completionListener) {
+        this.completionListener = completionListener;
+    }
+
     @Override
     public void onStateChange(final CredentialState credentialState) {
         new Handler(Looper.getMainLooper()).post(new Runnable() {
@@ -78,6 +84,10 @@ public class CredentialView extends LinearLayout implements LoginStateListener<C
                 credentialLoginUrlButtonTv.setText(credentialState.loginButtonText);
                 credentialLoginProgressbar.setVisibility(credentialState.progressBarVisible ? View.VISIBLE : View.INVISIBLE);
                 credentialLoginButton.setBackgroundColor(credentialState.getLoginButtonColor());
+
+                if (completionListener != null && credentialState.isFinished) {
+                    completionListener.onDone();
+                }
             }
         });
     }

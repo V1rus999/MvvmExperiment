@@ -33,7 +33,7 @@ public class AuthenticationInterceptor implements Interceptor {
 
         // Request customization: add request headers
         Request.Builder requestBuilder = original.newBuilder()
-                .header("Authorization", Credentials.basic(username, password)); // <-- this is the important line
+                .header("Authorization", Credentials.basic(username, password));
 
         Request request = requestBuilder.build();
         return chain.proceed(request);

@@ -4,6 +4,7 @@ import com.droidit.domain.DefaultCallback;
 import com.droidit.domain.DefaultValues;
 import com.droidit.domain.authentication.AuthService;
 import com.droidit.domain.login_mvvm.LoginStateListener;
+import com.droidit.domain.login_mvvm.datastore.UserDataStore;
 
 import javax.inject.Inject;
 
@@ -19,12 +20,14 @@ import static com.droidit.domain.login_mvvm.LoginStates.SUCCESS;
 public class LoginCredentialViewModel implements CredentialViewModel {
 
     private final AuthService authService;
+    private final UserDataStore userDataStore;
     private CredentialState credentialState;
     private LoginStateListener<CredentialState> stateListener;
 
     @Inject
-    public LoginCredentialViewModel(final AuthService authService) {
+    public LoginCredentialViewModel(final AuthService authService, final UserDataStore userDataStore) {
         this.authService = authService;
+        this.userDataStore = userDataStore;
         credentialState = new CredentialState("Login", false, NORMAL);
     }
 
@@ -41,7 +44,7 @@ public class LoginCredentialViewModel implements CredentialViewModel {
                 switchToErrorState("Empty Credentials");
             } else {
                 switchToBusyState();
-                authenticate(DefaultValues.defaultUrl, username, password);
+                authenticate(username, password);
             }
             return;
         }
@@ -51,7 +54,9 @@ public class LoginCredentialViewModel implements CredentialViewModel {
         }
     }
 
-    private void authenticate(String url, String username, String password) {
+    private void authenticate(String username, String password) {
+        String url = userDataStore.getUserUrl();
+        url = url.isEmpty() ? DefaultValues.defaultUrl : url;
         authService.authenticateUrl(url, username, password, new DefaultCallback<Boolean>() {
             @Override
             public void onSuccess(Boolean success) {
@@ -74,7 +79,7 @@ public class LoginCredentialViewModel implements CredentialViewModel {
 
     private void switchToNormalState() {
         credentialState.progressBarVisible = false;
-        credentialState.loginButtonText = "Next";
+        credentialState.loginButtonText = "Login";
         credentialState.currentState = NORMAL;
         this.stateListener.onStateChange(credentialState);
     }
