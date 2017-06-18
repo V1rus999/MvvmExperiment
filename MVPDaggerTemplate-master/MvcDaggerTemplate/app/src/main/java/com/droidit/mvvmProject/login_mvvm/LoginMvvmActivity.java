@@ -15,6 +15,8 @@ import com.droidit.mvvmProject.R;
 import com.droidit.mvvmProject.dependencyInjection.ApplicationComponent;
 import com.droidit.mvvmProject.dependencyInjection.DaggerLoginVmmvComponent;
 import com.droidit.mvvmProject.dependencyInjection.LoginVmmvComponent;
+import com.github.florent37.viewanimator.AnimationListener;
+import com.github.florent37.viewanimator.ViewAnimator;
 
 import javax.inject.Inject;
 
@@ -75,14 +77,46 @@ public class LoginMvvmActivity extends AppCompatActivity implements LoginStateLi
         new Handler(Looper.getMainLooper()).post(new Runnable() {
             @Override
             public void run() {
-                serverView.setVisibility(serverLoginState.serverViewVisible ? View.VISIBLE : View.GONE);
-                credentialView.setVisibility(serverLoginState.credentialViewVisible ? View.VISIBLE : View.GONE);
+                if (serverLoginState.serverViewVisible) showServer();
+                if (serverLoginState.credentialViewVisible) showCredential();
 
                 if (serverLoginState.isFinished) {
                     LoginMvvmActivity.this.finish();
                 }
             }
         });
+    }
+
+    private void showServer() {
+        if (serverView.getVisibility() != View.VISIBLE) {
+            ViewAnimator.animate(credentialView).onStart(new AnimationListener.Start() {
+                @Override
+                public void onStart() {
+                }
+            }).duration(200).scale(1, 0).fadeOut().thenAnimate(serverView).onStart(new AnimationListener.Start() {
+                @Override
+                public void onStart() {
+                    credentialView.setVisibility(View.GONE);
+                    serverView.setVisibility(View.VISIBLE);
+                }
+            }).duration(200).scale(0, 1).fadeIn().accelerate().start();
+        }
+    }
+
+    private void showCredential() {
+        if (credentialView.getVisibility() != View.VISIBLE) {
+            ViewAnimator.animate(serverView).onStart(new AnimationListener.Start() {
+                @Override
+                public void onStart() {
+                }
+            }).duration(200).scale(1, 0).fadeOut().thenAnimate(credentialView).onStart(new AnimationListener.Start() {
+                @Override
+                public void onStart() {
+                    serverView.setVisibility(View.GONE);
+                    credentialView.setVisibility(View.VISIBLE);
+                }
+            }).duration(200).scale(0, 1).fadeIn().accelerate().start();
+        }
     }
 
     @Override
