@@ -53,6 +53,12 @@ public class LoginServerViewModel implements ServerViewModel {
         }
     }
 
+    @Override
+    public void onDetached() {
+        serverState.isFinished = false;
+        switchToNormalState();
+    }
+
     private void checkUrl(final String serverUrl) {
         authService.checkUrl(serverUrl, new DefaultCallback<Boolean>() {
             @Override

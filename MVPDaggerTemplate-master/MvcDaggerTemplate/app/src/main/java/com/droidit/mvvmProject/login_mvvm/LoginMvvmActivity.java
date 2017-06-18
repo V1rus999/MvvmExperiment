@@ -38,6 +38,7 @@ public class LoginMvvmActivity extends AppCompatActivity implements LoginStateLi
         setContentView(R.layout.activity_login);
         this.initializeInjector();
         ButterKnife.bind(this);
+        loginViewModel.attachStateListener(this);
         serverView.attachServerCompletionListener(serverCompletionListener);
         serverView.setVisibility(View.VISIBLE);
         credentialView.attachCompletionListener(credentialCompletionListener);
@@ -76,7 +77,16 @@ public class LoginMvvmActivity extends AppCompatActivity implements LoginStateLi
             public void run() {
                 serverView.setVisibility(serverLoginState.serverViewVisible ? View.VISIBLE : View.GONE);
                 credentialView.setVisibility(serverLoginState.credentialViewVisible ? View.VISIBLE : View.GONE);
+
+                if (serverLoginState.isFinished) {
+                    LoginMvvmActivity.this.finish();
+                }
             }
         });
+    }
+
+    @Override
+    public void onBackPressed() {
+        loginViewModel.onBackPressed();
     }
 }

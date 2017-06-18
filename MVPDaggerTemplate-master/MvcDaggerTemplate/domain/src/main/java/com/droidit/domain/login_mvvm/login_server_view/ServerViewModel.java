@@ -9,4 +9,6 @@ import com.droidit.domain.login_mvvm.BaseViewModel;
 public interface ServerViewModel extends BaseViewModel<ServerState> {
 
     void onLoginButtonClicked(String serverUrlText);
+
+    void onDetached();
 }

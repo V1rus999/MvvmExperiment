@@ -75,6 +75,14 @@ public class ServerView extends LinearLayout implements LoginStateListener<Serve
     }
 
     @Override
+    public void setVisibility(int visibility) {
+        super.setVisibility(visibility);
+        if (visibility == GONE) {
+            loginServerViewModel.onDetached();
+        }
+    }
+
+    @Override
     public void onStateChange(final ServerState serverState) {
         new Handler(Looper.getMainLooper()).post(new Runnable() {
             @Override

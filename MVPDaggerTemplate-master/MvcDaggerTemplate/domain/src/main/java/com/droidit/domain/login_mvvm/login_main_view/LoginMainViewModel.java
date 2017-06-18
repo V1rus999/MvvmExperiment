@@ -35,4 +35,15 @@ public class LoginMainViewModel implements LoginViewModel {
     public void onCredentialViewDone() {
 
     }
+
+    @Override
+    public void onBackPressed() {
+        if (loginMainState.credentialViewVisible) {
+            loginMainState.serverViewVisible = true;
+            loginMainState.credentialViewVisible = false;
+        } else {
+            loginMainState.isFinished = true;
+        }
+        stateListener.onStateChange(loginMainState);
+    }
 }

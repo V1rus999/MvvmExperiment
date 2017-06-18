@@ -8,6 +8,7 @@ public class LoginMainState {
 
     public boolean serverViewVisible;
     public boolean credentialViewVisible;
+    public boolean isFinished;
 
     public LoginMainState(boolean serverViewVisible, boolean credentialViewVisible) {
         this.serverViewVisible = serverViewVisible;

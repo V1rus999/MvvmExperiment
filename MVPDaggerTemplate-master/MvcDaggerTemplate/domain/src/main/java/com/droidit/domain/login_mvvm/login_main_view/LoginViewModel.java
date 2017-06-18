@@ -11,4 +11,6 @@ public interface LoginViewModel extends BaseViewModel<LoginMainState> {
     void onServerViewDone();
 
     void onCredentialViewDone();
+
+    void onBackPressed();
 }
