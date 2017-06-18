@@ -10,12 +10,18 @@ import javax.inject.Inject;
 
 public class LoginMainViewModel implements LoginViewModel {
 
+    private LoginStateListener<LoginMainState> stateListener;
+    private LoginMainState loginMainState;
+
     @Inject
     public LoginMainViewModel() {
+        loginMainState = new LoginMainState(true, false);
+
     }
 
     @Override
-    public void attachStateListener(LoginStateListener<LoginMainState> stateListener) {
-
+    public void attachStateListener(final LoginStateListener<LoginMainState> stateListener) {
+        this.stateListener = stateListener;
+        stateListener.onStateChange(loginMainState);
     }
 }

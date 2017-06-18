@@ -85,7 +85,7 @@ public class CredentialView extends LinearLayout implements LoginStateListener<C
                 credentialLoginProgressbar.setVisibility(credentialState.progressBarVisible ? View.VISIBLE : View.INVISIBLE);
                 credentialLoginButton.setBackgroundColor(credentialState.getLoginButtonColor());
 
-                if (completionListener != null) {
+                if (completionListener != null && credentialState.isFinished) {
                     completionListener.onDone();
                 }
             }
