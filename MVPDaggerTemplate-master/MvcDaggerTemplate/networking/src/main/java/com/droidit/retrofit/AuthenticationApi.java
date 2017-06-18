@@ -11,8 +11,6 @@ import retrofit2.http.Path;
 
 public interface AuthenticationApi {
 
-    static final String defaultUrl = "";
-
     @GET("user/{UserName}")
     Call<ResponseBody> getUser(@Path("UserName") final String userName);
 }
