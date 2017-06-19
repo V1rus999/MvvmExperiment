@@ -5,6 +5,7 @@ import com.droidit.domain.DefaultValues;
 import com.droidit.domain.authentication.AuthService;
 import com.droidit.domain.login_mvvm.LoginStateListener;
 import com.droidit.domain.login_mvvm.datastore.UserDataStore;
+import com.droidit.domain.threading.BackgroundExecutor;
 
 import javax.inject.Inject;
 
@@ -19,13 +20,15 @@ import static com.droidit.domain.login_mvvm.LoginStates.SUCCESS;
 
 public class LoginCredentialViewModel implements CredentialViewModel {
 
+    private final BackgroundExecutor backgroundExecutor;
     private final AuthService authService;
     private final UserDataStore userDataStore;
     private CredentialState credentialState;
     private LoginStateListener<CredentialState> stateListener;
 
     @Inject
-    public LoginCredentialViewModel(final AuthService authService, final UserDataStore userDataStore) {
+    public LoginCredentialViewModel(final BackgroundExecutor backgroundExecutor, final UserDataStore userDataStore, final AuthService authService) {
+        this.backgroundExecutor = backgroundExecutor;
         this.authService = authService;
         this.userDataStore = userDataStore;
         credentialState = new CredentialState("Login", false, NORMAL);
@@ -39,19 +42,24 @@ public class LoginCredentialViewModel implements CredentialViewModel {
 
     @Override
     public void onLoginButtonClicked(final String username, final String password) {
-        if (credentialState.currentState == NORMAL) {
-            if (username.isEmpty() || password.isEmpty()) {
-                switchToErrorState("Empty Credentials");
-            } else {
-                switchToBusyState();
-                authenticate(username, password);
-            }
-            return;
-        }
+        backgroundExecutor.execute(new Runnable() {
+            @Override
+            public void run() {
+                if (credentialState.currentState == NORMAL) {
+                    if (username.isEmpty() || password.isEmpty()) {
+                        switchToErrorState("Empty Credentials");
+                    } else {
+                        switchToBusyState();
+                        authenticate(username, password);
+                    }
+                    return;
+                }
 
-        if (credentialState.currentState == BUSY || credentialState.currentState == ERROR) {
-            switchToNormalState();
-        }
+                if (credentialState.currentState == BUSY || credentialState.currentState == ERROR) {
+                    switchToNormalState();
+                }
+            }
+        });
     }
 
     private void authenticate(String username, String password) {

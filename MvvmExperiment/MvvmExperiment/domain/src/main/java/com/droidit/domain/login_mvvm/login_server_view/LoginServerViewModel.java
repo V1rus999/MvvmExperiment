@@ -5,6 +5,7 @@ import com.droidit.domain.DefaultValues;
 import com.droidit.domain.authentication.AuthService;
 import com.droidit.domain.login_mvvm.LoginStateListener;
 import com.droidit.domain.login_mvvm.datastore.UserDataStore;
+import com.droidit.domain.threading.BackgroundExecutor;
 
 import javax.inject.Inject;
 
@@ -19,13 +20,15 @@ import static com.droidit.domain.login_mvvm.LoginStates.SUCCESS;
 
 public class LoginServerViewModel implements ServerViewModel {
 
+    private final BackgroundExecutor backgroundExecutor;
     private final AuthService authService;
     private final UserDataStore userDataStore;
     private LoginStateListener<ServerState> loginStateListener;
     private ServerState serverState;
 
     @Inject
-    public LoginServerViewModel(final AuthService authService, final UserDataStore userDataStore) {
+    public LoginServerViewModel(final BackgroundExecutor backgroundExecutor, final UserDataStore userDataStore, final AuthService authService) {
+        this.backgroundExecutor = backgroundExecutor;
         this.authService = authService;
         this.userDataStore = userDataStore;
         serverState = new ServerState(DefaultValues.defaultUrl, "Next", false, NORMAL);
@@ -38,19 +41,24 @@ public class LoginServerViewModel implements ServerViewModel {
 
     @Override
     public void onLoginButtonClicked(final String serverUrlText) {
-        if (serverState.currentState == NORMAL) {
-            if (serverUrlText.isEmpty()) {
-                switchToErrorState("Empty Server Url");
-            } else {
-                switchToBusyState();
-                checkUrl(serverUrlText);
-            }
-            return;
-        }
+        backgroundExecutor.execute(new Runnable() {
+            @Override
+            public void run() {
+                if (serverState.currentState == NORMAL) {
+                    if (serverUrlText.isEmpty()) {
+                        switchToErrorState("Empty Server Url");
+                    } else {
+                        switchToBusyState();
+                        checkUrl(serverUrlText);
+                    }
+                    return;
+                }
 
-        if (serverState.currentState == BUSY || serverState.currentState == ERROR) {
-            switchToNormalState();
-        }
+                if (serverState.currentState == BUSY || serverState.currentState == ERROR) {
+                    switchToNormalState();
+                }
+            }
+        });
     }
 
     @Override

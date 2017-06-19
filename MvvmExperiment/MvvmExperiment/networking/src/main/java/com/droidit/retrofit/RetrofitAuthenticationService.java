@@ -3,13 +3,15 @@ package com.droidit.retrofit;
 import com.droidit.domain.DefaultCallback;
 import com.droidit.domain.authentication.AuthService;
 
+import java.io.IOException;
+
 import javax.inject.Inject;
 
 import okhttp3.HttpUrl;
 import okhttp3.OkHttpClient;
 import okhttp3.ResponseBody;
 import retrofit2.Call;
-import retrofit2.Callback;
+import retrofit2.Response;
 import retrofit2.Retrofit;
 
 /**
@@ -37,21 +39,19 @@ public class RetrofitAuthenticationService implements AuthService {
 
         AuthenticationApi authApi = retrofit.baseUrl(httpUrl).build().create(AuthenticationApi.class);
         Call<ResponseBody> call = authApi.getUser("current");
-        call.enqueue(new Callback<ResponseBody>() {
-            @Override
-            public void onResponse(Call<ResponseBody> call, retrofit2.Response<ResponseBody> response) {
-                if (response.code() == 401) {
-                    callback.onSuccess(true);
-                } else {
-                    callback.onFailure(new Throwable(response.message()));
-                }
-            }
+        Response<ResponseBody> responseBody;
+        try {
+            responseBody = call.execute();
+        } catch (IOException e) {
+            callback.onFailure(e);
+            return;
+        }
 
-            @Override
-            public void onFailure(Call<ResponseBody> call, Throwable t) {
-                callback.onFailure(t);
-            }
-        });
+        if (responseBody.code() == 401) {
+            callback.onSuccess(true);
+        } else {
+            callback.onFailure(new Throwable(responseBody.message()));
+        }
     }
 
     @Override
@@ -67,20 +67,18 @@ public class RetrofitAuthenticationService implements AuthService {
                 .client(new OkHttpClient.Builder().addInterceptor(authenticationInterceptor).build()).build()
                 .create(AuthenticationApi.class);
         Call<ResponseBody> call = authApi.getUser("current");
-        call.enqueue(new Callback<ResponseBody>() {
-            @Override
-            public void onResponse(Call<ResponseBody> call, retrofit2.Response<ResponseBody> response) {
-                if (response.code() < 300) {
-                    callback.onSuccess(true);
-                } else {
-                    callback.onFailure(new Throwable(response.message()));
-                }
-            }
+        Response<ResponseBody> responseBody;
+        try {
+            responseBody = call.execute();
+        } catch (IOException e) {
+            callback.onFailure(e);
+            return;
+        }
 
-            @Override
-            public void onFailure(Call<ResponseBody> call, Throwable t) {
-                callback.onFailure(t);
-            }
-        });
+        if (responseBody.code() < 300) {
+            callback.onSuccess(true);
+        } else {
+            callback.onFailure(new Throwable(responseBody.message()));
+        }
     }
 }
