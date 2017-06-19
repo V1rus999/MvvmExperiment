@@ -6,5 +6,5 @@ package com.droidit.domain;
 
 public class DefaultValues {
 
-    public static final String defaultUrl = "https://deadpool.denallix.com/k2api/api/";
+    public static final String defaultUrl = "";
 }
