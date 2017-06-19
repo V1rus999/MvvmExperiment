@@ -62,6 +62,12 @@ public class LoginCredentialViewModel implements CredentialViewModel {
         });
     }
 
+    @Override
+    public void onDetached() {
+        credentialState.isFinished = false;
+        switchToNormalState();
+    }
+
     private void authenticate(String username, String password) {
         String url = userDataStore.getUserUrl();
         url = url.isEmpty() ? DefaultValues.defaultUrl : url;

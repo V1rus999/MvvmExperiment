@@ -77,6 +77,14 @@ public class CredentialView extends LinearLayout implements LoginStateListener<C
     }
 
     @Override
+    public void setVisibility(int visibility) {
+        super.setVisibility(visibility);
+        if (visibility == GONE) {
+            credentialViewModel.onDetached();
+        }
+    }
+
+    @Override
     public void onStateChange(final CredentialState credentialState) {
         new Handler(Looper.getMainLooper()).post(new Runnable() {
             @Override

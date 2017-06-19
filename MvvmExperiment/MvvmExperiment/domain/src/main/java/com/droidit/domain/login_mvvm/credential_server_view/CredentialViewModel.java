@@ -9,4 +9,6 @@ import com.droidit.domain.login_mvvm.BaseViewModel;
 public interface CredentialViewModel extends BaseViewModel<CredentialState> {
 
     void onLoginButtonClicked(final String username, final String password);
+
+    void onDetached();
 }
