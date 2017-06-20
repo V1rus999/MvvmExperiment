@@ -1,8 +1,8 @@
 package com.droidit.mvvmProject.dependencyInjection;
 
-import com.droidit.mvvmProject.login_mvvm.CredentialView;
-import com.droidit.mvvmProject.login_mvvm.LoginMvvmActivity;
-import com.droidit.mvvmProject.login_mvvm.ServerView;
+import com.droidit.mvvmProject.login_mvvm.views.CredentialView;
+import com.droidit.mvvmProject.login_mvvm.views.LoginMvvmActivity;
+import com.droidit.mvvmProject.login_mvvm.views.ServerView;
 
 import dagger.Component;
 

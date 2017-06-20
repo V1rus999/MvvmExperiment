@@ -6,12 +6,10 @@ package com.droidit.domain.login_mvvm.login_main_view;
 
 public class LoginMainState {
 
-    public boolean serverViewVisible;
-    public boolean credentialViewVisible;
+    public LoginMainStates currentState;
     public boolean isFinished;
 
-    public LoginMainState(boolean serverViewVisible, boolean credentialViewVisible) {
-        this.serverViewVisible = serverViewVisible;
-        this.credentialViewVisible = credentialViewVisible;
+    public LoginMainState(LoginMainStates currentState) {
+        this.currentState = currentState;
     }
 }

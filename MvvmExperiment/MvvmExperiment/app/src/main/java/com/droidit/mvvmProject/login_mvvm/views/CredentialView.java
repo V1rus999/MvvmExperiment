@@ -1,4 +1,4 @@
-package com.droidit.mvvmProject.login_mvvm;
+package com.droidit.mvvmProject.login_mvvm.views;
 
 import android.content.Context;
 import android.os.Handler;

@@ -27,7 +27,7 @@ public class ViewModelModule {
     }
 
     @Provides
-    public LoginViewModel providLoginMainViewModel(final LoginMainViewModel loginViewModel) {
+    public LoginViewModel provideLoginMainViewModel(final LoginMainViewModel loginViewModel) {
         return loginViewModel;
     }
 }

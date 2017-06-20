@@ -1,4 +1,4 @@
-package com.droidit.mvvmProject.login_mvvm;
+package com.droidit.mvvmProject.login_mvvm.views;
 
 import android.os.Bundle;
 import android.os.Handler;
@@ -9,6 +9,7 @@ import android.view.View;
 import com.droidit.domain.login_mvvm.LoginStateListener;
 import com.droidit.domain.login_mvvm.ViewCompletionListener;
 import com.droidit.domain.login_mvvm.login_main_view.LoginMainState;
+import com.droidit.domain.login_mvvm.login_main_view.LoginMainStates;
 import com.droidit.domain.login_mvvm.login_main_view.LoginViewModel;
 import com.droidit.mvvmProject.DefaultApplication;
 import com.droidit.mvvmProject.R;
@@ -77,8 +78,10 @@ public class LoginMvvmActivity extends AppCompatActivity implements LoginStateLi
         new Handler(Looper.getMainLooper()).post(new Runnable() {
             @Override
             public void run() {
-                if (serverLoginState.serverViewVisible) showServer();
-                if (serverLoginState.credentialViewVisible) showCredential();
+                if (serverLoginState.currentState == LoginMainStates.SERVER)
+                    showServer();
+                else
+                    showCredential();
 
                 if (serverLoginState.isFinished) {
                     LoginMvvmActivity.this.finish();

@@ -7,13 +7,13 @@
     android:focusableInTouchMode="true"
     android:padding="16dp">
 
-    <com.droidit.mvvmProject.login_mvvm.ServerView
+    <com.droidit.mvvmProject.login_mvvm.views.ServerView
         android:id="@+id/server_view"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_centerInParent="true" />
 
-    <com.droidit.mvvmProject.login_mvvm.CredentialView
+    <com.droidit.mvvmProject.login_mvvm.views.CredentialView
         android:id="@+id/credential_view"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"

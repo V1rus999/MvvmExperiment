@@ -15,7 +15,7 @@ public class LoginMainViewModel implements LoginViewModel {
 
     @Inject
     public LoginMainViewModel() {
-        loginMainState = new LoginMainState(true, false);
+        loginMainState = new LoginMainState(LoginMainStates.SERVER);
     }
 
     @Override
@@ -26,8 +26,7 @@ public class LoginMainViewModel implements LoginViewModel {
 
     @Override
     public void onServerViewDone() {
-        loginMainState.serverViewVisible = false;
-        loginMainState.credentialViewVisible = true;
+        loginMainState.currentState = LoginMainStates.CREDENTIAL;
         stateListener.onStateChange(loginMainState);
     }
 
@@ -38,9 +37,8 @@ public class LoginMainViewModel implements LoginViewModel {
 
     @Override
     public void onBackPressed() {
-        if (loginMainState.credentialViewVisible) {
-            loginMainState.serverViewVisible = true;
-            loginMainState.credentialViewVisible = false;
+        if (loginMainState.currentState == LoginMainStates.CREDENTIAL) {
+            loginMainState.currentState = LoginMainStates.SERVER;
         } else {
             loginMainState.isFinished = true;
         }
