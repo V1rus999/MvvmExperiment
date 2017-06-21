@@ -6,7 +6,15 @@ import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.widget.Toast;
 
+import com.droidit.domain.rx_java.normal_example.MvpExamplePresenter;
+import com.droidit.domain.rx_java.normal_example.MvpExampleView;
+import com.droidit.mvvmProject.DefaultApplication;
 import com.droidit.mvvmProject.R;
+import com.droidit.mvvmProject.dependencyInjection.ApplicationComponent;
+import com.droidit.mvvmProject.dependencyInjection.DaggerRxJavaComponent;
+import com.droidit.mvvmProject.dependencyInjection.RxJavaComponent;
+
+import javax.inject.Inject;
 
 import butterknife.ButterKnife;
 import butterknife.OnClick;
@@ -15,7 +23,6 @@ import io.reactivex.Observable;
 import io.reactivex.Observer;
 import io.reactivex.annotations.NonNull;
 import io.reactivex.disposables.Disposable;
-import io.reactivex.schedulers.Schedulers;
 
 public class RxJavaActivity extends AppCompatActivity {
 
@@ -26,11 +33,16 @@ public class RxJavaActivity extends AppCompatActivity {
 
     private Unbinder unbinder;
 
+    @Inject
+    MvpExamplePresenter presenter;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        this.initializeInjector();
         setContentView(R.layout.activity_rx_java);
         unbinder = ButterKnife.bind(this);
+        presenter.attachView(mvpExampleView);
     }
 
     @Override
@@ -39,10 +51,21 @@ public class RxJavaActivity extends AppCompatActivity {
         super.onDestroy();
     }
 
+    protected ApplicationComponent getApplicationComponent() {
+        return ((DefaultApplication) this.getApplication()).getMainComponent();
+    }
+
+    private void initializeInjector() {
+        RxJavaComponent component = DaggerRxJavaComponent.builder()
+                .applicationComponent(getApplicationComponent())
+                .build();
+        component.inject(this);
+    }
+
     @OnClick(R.id.rx_say_hello_btn)
-    public void onStartEmittingBtnClicked() {
+    public void onSayHelloBtnClicked() {
         Observable<String> observable = Observable.just("Hello World!");
-        observable.subscribeOn(Schedulers.newThread()).subscribe(new Observer<String>() {
+        observable.subscribe(new Observer<String>() {
             @Override
             public void onSubscribe(@NonNull Disposable d) {
 
@@ -65,9 +88,28 @@ public class RxJavaActivity extends AppCompatActivity {
         });
     }
 
-    @OnClick(R.id.rx_stop_emitting_btn)
-    public void onStopEmittingBtnClicked() {
+    @OnClick(R.id.rx_get_stuff)
+    public void onRxGetStuffBtnClicked() {
 
     }
+
+
+    @OnClick(R.id.mvp_get_stuff)
+    public void onNormalGetStuffBtnClicked() {
+        presenter.onMvpGetStuffButtonClicked();
+    }
+
+    private final MvpExampleView mvpExampleView = new MvpExampleView() {
+
+        @Override
+        public void displayJoke(String joke) {
+            Toast.makeText(RxJavaActivity.this, joke, Toast.LENGTH_LONG).show();
+        }
+
+        @Override
+        public void displayError(String error) {
+            Toast.makeText(RxJavaActivity.this, error, Toast.LENGTH_LONG).show();
+        }
+    };
 
 }

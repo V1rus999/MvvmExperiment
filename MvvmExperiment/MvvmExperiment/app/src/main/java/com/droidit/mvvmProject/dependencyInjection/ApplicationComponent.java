@@ -3,6 +3,7 @@ package com.droidit.mvvmProject.dependencyInjection;
 import android.content.Context;
 
 import com.droidit.domain.login_mvvm.datastore.UserDataStore;
+import com.droidit.domain.threading.MainThread;
 
 import javax.inject.Singleton;
 
@@ -19,5 +20,7 @@ public interface ApplicationComponent {
     Context context();
 
     UserDataStore userDataStore();
+
+    MainThread mainThread();
 
 }

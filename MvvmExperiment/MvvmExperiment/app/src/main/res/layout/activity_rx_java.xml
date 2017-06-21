@@ -6,27 +6,28 @@
     android:orientation="vertical"
     tools:context="com.droidit.mvvmProject.rxjava.RxJavaActivity">
 
-    <LinearLayout
-        android:layout_width="match_parent"
+    <Button
+        android:id="@+id/rx_say_hello_btn"
+        style="?android:buttonBarButtonStyle"
+        android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:orientation="horizontal">
+        android:layout_gravity="start"
+        android:text="Say hello through rx" />
 
-        <Button
-            android:id="@+id/rx_say_hello_btn"
-            style="?android:buttonBarButtonStyle"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_gravity="start"
-            android:text="Say hello through rx" />
+    <Button
+        android:id="@+id/rx_get_stuff"
+        style="?android:buttonBarButtonStyle"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="end"
+        android:text="Get Stuff Rx" />
 
-        <Button
-            android:id="@+id/rx_stop_emitting_btn"
-            style="?android:buttonBarButtonStyle"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_gravity="end"
-            android:text="Stop Emitting" />
-
-    </LinearLayout>
+    <Button
+        android:id="@+id/mvp_get_stuff"
+        style="?android:buttonBarButtonStyle"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="end"
+        android:text="Get Stuff MVP" />
 
 </LinearLayout>
