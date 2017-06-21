@@ -1,5 +1,7 @@
 package com.droidit.mvvmProject.login_mvvm.views;
 
+import android.content.Context;
+import android.content.Intent;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Looper;
@@ -25,6 +27,11 @@ import butterknife.BindView;
 import butterknife.ButterKnife;
 
 public class LoginMvvmActivity extends AppCompatActivity implements LoginStateListener<LoginMainState> {
+
+    public static void start(Context context) {
+        Intent starter = new Intent(context, LoginMvvmActivity.class);
+        context.startActivity(starter);
+    }
 
     @BindView(R.id.server_view)
     ServerView serverView;
