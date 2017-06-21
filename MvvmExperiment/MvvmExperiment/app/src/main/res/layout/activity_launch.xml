@@ -3,6 +3,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="fill_parent"
     android:layout_height="fill_parent"
+    android:orientation="vertical"
     tools:context="com.droidit.mvvmProject.launcher.LaunchActivity">
 
     <Button
@@ -11,5 +12,12 @@
         android:layout_height="wrap_content"
         android:layout_margin="16dp"
         android:text="Launch MVVM Login" />
+
+    <Button
+        android:id="@+id/launch_rxjava_btn"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_margin="16dp"
+        android:text="Launch RxJava Activity" />
 
 </LinearLayout>

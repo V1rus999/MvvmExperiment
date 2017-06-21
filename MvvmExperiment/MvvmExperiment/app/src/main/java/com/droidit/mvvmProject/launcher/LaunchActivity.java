@@ -5,6 +5,7 @@ import android.os.Bundle;
 
 import com.droidit.mvvmProject.R;
 import com.droidit.mvvmProject.login_mvvm.views.LoginMvvmActivity;
+import com.droidit.mvvmProject.rxjava.RxJavaActivity;
 
 import butterknife.ButterKnife;
 import butterknife.OnClick;
@@ -21,15 +22,21 @@ public class LaunchActivity extends AppCompatActivity {
         unbinder = ButterKnife.bind(this);
     }
 
+    @Override
+    protected void onDestroy() {
+        unbinder.unbind();
+        super.onDestroy();
+    }
+
     @OnClick(R.id.launch_mvvm_btn)
     public void onMvvmBtnClicked() {
         LoginMvvmActivity.start(this);
         finish();
     }
 
-    @Override
-    protected void onDestroy() {
-        unbinder.unbind();
-        super.onDestroy();
+    @OnClick(R.id.launch_rxjava_btn)
+    public void onRxJavaBtnClicked() {
+        RxJavaActivity.start(this);
+        finish();
     }
 }
