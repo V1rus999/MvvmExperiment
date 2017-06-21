@@ -6,6 +6,7 @@ import com.droidit.domain.threading.BackgroundExecutor;
 import com.droidit.retrofit.NorrisJokeApi;
 import com.droidit.retrofit.RetrofitAuthenticationService;
 import com.droidit.retrofit.RetrofitNorrisJokeService;
+import com.jakewharton.retrofit2.adapter.rxjava2.RxJava2CallAdapterFactory;
 
 import dagger.Module;
 import dagger.Provides;
@@ -27,6 +28,7 @@ public class NetworkModule {
     public Retrofit.Builder provideApiClient(GsonConverterFactory gsonConverterFactory, BackgroundExecutor backgroundExecutor) {
         return new Retrofit.Builder()
                 .callbackExecutor(backgroundExecutor)
+                .addCallAdapterFactory(RxJava2CallAdapterFactory.create())
                 .addConverterFactory(gsonConverterFactory);
     }
 
