@@ -31,12 +31,10 @@ public class LaunchActivity extends AppCompatActivity {
     @OnClick(R.id.launch_mvvm_btn)
     public void onMvvmBtnClicked() {
         LoginMvvmActivity.start(this);
-        finish();
     }
 
     @OnClick(R.id.launch_rxjava_btn)
     public void onRxJavaBtnClicked() {
         RxJavaActivity.start(this);
-        finish();
     }
 }

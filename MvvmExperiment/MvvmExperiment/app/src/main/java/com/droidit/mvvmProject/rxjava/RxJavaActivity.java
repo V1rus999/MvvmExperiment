@@ -27,6 +27,7 @@ import io.reactivex.Observer;
 import io.reactivex.android.schedulers.AndroidSchedulers;
 import io.reactivex.annotations.NonNull;
 import io.reactivex.disposables.Disposable;
+import io.reactivex.functions.Consumer;
 import io.reactivex.functions.Function;
 import io.reactivex.schedulers.Schedulers;
 
@@ -41,6 +42,7 @@ public class RxJavaActivity extends AppCompatActivity {
     TextView result_tv;
 
     private Unbinder unbinder;
+    private Disposable disposable;
 
     @Inject
     MvpExamplePresenter presenter;
@@ -60,6 +62,9 @@ public class RxJavaActivity extends AppCompatActivity {
     @Override
     protected void onDestroy() {
         unbinder.unbind();
+        if (disposable != null && !disposable.isDisposed()) {
+            disposable.dispose();
+        }
         super.onDestroy();
     }
 
@@ -108,7 +113,7 @@ public class RxJavaActivity extends AppCompatActivity {
 
     @OnClick(R.id.rx_get_stuff)
     public void onRxGetStuffBtnClicked() {
-        norrisJokeApi.getNorrisJokeRx()
+        disposable = norrisJokeApi.getNorrisJokeRx()
                 .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
                 .map(new Function<NorrisJokeDto, NorrisJokeDto>() {
@@ -117,27 +122,13 @@ public class RxJavaActivity extends AppCompatActivity {
                         norrisJokeDto.value = "Rx: \n" + norrisJokeDto.value + "\n\n";
                         return norrisJokeDto;
                     }
-                })
-                .subscribe(new Observer<NorrisJokeDto>() {
-            @Override
-            public void onSubscribe(@NonNull Disposable d) {
-            }
-
-            @Override
-            public void onNext(@NonNull NorrisJokeDto norrisJokeDto) {
-                result_tv.append(norrisJokeDto.value);
-            }
-
-            @Override
-            public void onError(@NonNull Throwable e) {
-            }
-
-            @Override
-            public void onComplete() {
-            }
-        });
+                }).doOnNext(new Consumer<NorrisJokeDto>() {
+                    @Override
+                    public void accept(@NonNull NorrisJokeDto norrisJokeDto) throws Exception {
+                        result_tv.append(norrisJokeDto.value);
+                    }
+                }).subscribe();
     }
-
 
     @OnClick(R.id.mvp_get_stuff)
     public void onNormalGetStuffBtnClicked() {
