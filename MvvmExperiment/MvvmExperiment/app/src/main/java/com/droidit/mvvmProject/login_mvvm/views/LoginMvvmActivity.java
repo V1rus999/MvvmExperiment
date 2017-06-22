@@ -18,6 +18,7 @@ import com.droidit.mvvmProject.R;
 import com.droidit.mvvmProject.dependencyInjection.ApplicationComponent;
 import com.droidit.mvvmProject.dependencyInjection.DaggerLoginVmmvComponent;
 import com.droidit.mvvmProject.dependencyInjection.LoginVmmvComponent;
+import com.droidit.mvvmProject.util.TransitionHelper;
 import com.github.florent37.viewanimator.AnimationListener;
 import com.github.florent37.viewanimator.ViewAnimator;
 
@@ -31,6 +32,7 @@ public class LoginMvvmActivity extends AppCompatActivity implements LoginStateLi
     public static void start(Context context) {
         Intent starter = new Intent(context, LoginMvvmActivity.class);
         context.startActivity(starter);
+        TransitionHelper.transition(context, TransitionHelper.slideInFromRight());
     }
 
     @BindView(R.id.server_view)
@@ -64,6 +66,12 @@ public class LoginMvvmActivity extends AppCompatActivity implements LoginStateLi
                 .applicationComponent(getApplicationComponent())
                 .build();
         basicExampleComponent.inject(this);
+    }
+
+    @Override
+    public void finish() {
+        super.finish();
+        TransitionHelper.transition(this, TransitionHelper.slideInFromLeft());
     }
 
     private final ViewCompletionListener serverCompletionListener = new ViewCompletionListener() {

@@ -14,6 +14,7 @@ import com.droidit.mvvmProject.R;
 import com.droidit.mvvmProject.dependencyInjection.ApplicationComponent;
 import com.droidit.mvvmProject.dependencyInjection.DaggerRxJavaComponent;
 import com.droidit.mvvmProject.dependencyInjection.RxJavaComponent;
+import com.droidit.mvvmProject.util.TransitionHelper;
 import com.droidit.retrofit.NorrisJokeApi;
 
 import javax.inject.Inject;
@@ -36,6 +37,7 @@ public class RxJavaActivity extends AppCompatActivity {
     public static void start(Context context) {
         Intent starter = new Intent(context, RxJavaActivity.class);
         context.startActivity(starter);
+        TransitionHelper.transition(context, TransitionHelper.slideInFromRight());
     }
 
     @BindView(R.id.result_tv)
@@ -77,6 +79,12 @@ public class RxJavaActivity extends AppCompatActivity {
                 .applicationComponent(getApplicationComponent())
                 .build();
         component.inject(this);
+    }
+
+    @Override
+    public void finish() {
+        super.finish();
+        TransitionHelper.transition(this, TransitionHelper.slideInFromLeft());
     }
 
     @OnClick(R.id.rx_say_hello_btn)

@@ -17,7 +17,8 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-        <activity android:name=".rxjava.RxJavaActivity"></activity>
+        <activity android:name=".rxjava.RxJavaActivity" />
+        <activity android:name=".rx_mvvm.RxMvvmActivity"></activity>
     </application>
 
 </manifest>
