@@ -24,7 +24,6 @@ import butterknife.ButterKnife;
 import butterknife.OnClick;
 import butterknife.Unbinder;
 import io.reactivex.Observable;
-import io.reactivex.Observer;
 import io.reactivex.android.schedulers.AndroidSchedulers;
 import io.reactivex.annotations.NonNull;
 import io.reactivex.disposables.Disposable;
@@ -89,34 +88,18 @@ public class RxJavaActivity extends AppCompatActivity {
 
     @OnClick(R.id.rx_say_hello_btn)
     public void onSayHelloBtnClicked() {
-        Observable<String> observable = Observable.just("Hello World!");
-        observable.map(new Function<String, Object>() {
-            @Override
-            public String apply(@NonNull String s) throws Exception {
-                return "Rx : \n" + s + "\n\n";
-            }
-        });
-        observable.subscribe(new Observer<String>() {
-            @Override
-            public void onSubscribe(@NonNull Disposable d) {
-
-            }
-
-            @Override
-            public void onNext(@NonNull String s) {
-                result_tv.append(s);
-            }
-
-            @Override
-            public void onError(@NonNull Throwable e) {
-
-            }
-
-            @Override
-            public void onComplete() {
-
-            }
-        });
+        Disposable d = Observable.just("Hello World!")
+                .map(new Function<String, String>() {
+                    @Override
+                    public String apply(@NonNull String s) throws Exception {
+                        return "Rx : \n" + s + "\n\n";
+                    }
+                }).doOnNext(new Consumer<String>() {
+                    @Override
+                    public void accept(@NonNull String s) throws Exception {
+                        result_tv.append(s);
+                    }
+                }).subscribe();
     }
 
     @OnClick(R.id.rx_get_stuff)
