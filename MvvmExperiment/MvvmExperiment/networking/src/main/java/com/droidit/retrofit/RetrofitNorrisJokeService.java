@@ -3,11 +3,13 @@ package com.droidit.retrofit;
 import com.droidit.domain.DefaultCallback;
 import com.droidit.domain.rx_java.NorrisJokeDto;
 import com.droidit.domain.rx_java.normal_example.NorrisJokeService;
+import com.droidit.domain.rx_mvvm.jokes.RxJokeService;
 
 import java.io.IOException;
 
 import javax.inject.Inject;
 
+import io.reactivex.Observable;
 import retrofit2.Call;
 import retrofit2.Response;
 
@@ -15,7 +17,7 @@ import retrofit2.Response;
  * Created by johannesC on 2017/06/21.
  */
 
-public class RetrofitNorrisJokeService implements NorrisJokeService{
+public class RetrofitNorrisJokeService implements NorrisJokeService, RxJokeService {
 
     private final NorrisJokeApi norrisJokeApi;
 
@@ -40,5 +42,10 @@ public class RetrofitNorrisJokeService implements NorrisJokeService{
         } else {
             callback.onFailure(new Throwable(responseBody.message()));
         }
+    }
+
+    @Override
+    public Observable<NorrisJokeDto> getJoke() {
+        return norrisJokeApi.getNorrisJokeRx();
     }
 }

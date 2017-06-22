@@ -1,4 +1,4 @@
-package com.droidit.domain.authentication;
+package com.droidit.domain.login_mvvm.authentication;
 
 import com.droidit.domain.DefaultCallback;
 

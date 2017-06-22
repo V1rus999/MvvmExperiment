@@ -6,6 +6,8 @@ import com.droidit.domain.login_mvvm.login_main_view.LoginMainViewModel;
 import com.droidit.domain.login_mvvm.login_main_view.LoginViewModel;
 import com.droidit.domain.login_mvvm.login_server_view.LoginServerViewModel;
 import com.droidit.domain.login_mvvm.login_server_view.ServerViewModel;
+import com.droidit.domain.rx_mvvm.DefaultJokeViewModel;
+import com.droidit.domain.rx_mvvm.JokeViewModel;
 
 import dagger.Module;
 import dagger.Provides;
@@ -29,5 +31,10 @@ public class ViewModelModule {
     @Provides
     public LoginViewModel provideLoginMainViewModel(final LoginMainViewModel loginViewModel) {
         return loginViewModel;
+    }
+
+    @Provides
+    public JokeViewModel provideJokeViewModel(final DefaultJokeViewModel viewModel) {
+        return viewModel;
     }
 }

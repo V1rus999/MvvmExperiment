@@ -1,6 +1,6 @@
 package com.droidit.domain.login_mvvm.login_main_view;
 
-import com.droidit.domain.login_mvvm.LoginStateListener;
+import com.droidit.domain.StateListener;
 
 import javax.inject.Inject;
 
@@ -10,7 +10,7 @@ import javax.inject.Inject;
 
 public class LoginMainViewModel implements LoginViewModel {
 
-    private LoginStateListener<LoginMainState> stateListener;
+    private StateListener<LoginMainState> stateListener;
     private LoginMainState loginMainState;
 
     @Inject
@@ -19,7 +19,7 @@ public class LoginMainViewModel implements LoginViewModel {
     }
 
     @Override
-    public void attachStateListener(final LoginStateListener<LoginMainState> stateListener) {
+    public void attachStateListener(final StateListener<LoginMainState> stateListener) {
         this.stateListener = stateListener;
         stateListener.onStateChange(loginMainState);
     }
