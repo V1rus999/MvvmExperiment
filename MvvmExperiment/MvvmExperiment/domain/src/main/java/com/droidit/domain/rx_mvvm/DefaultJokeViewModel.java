@@ -1,16 +1,17 @@
 package com.droidit.domain.rx_mvvm;
 
-import com.droidit.domain.StateListener;
 import com.droidit.domain.rx_java.NorrisJokeDto;
 import com.droidit.domain.rx_mvvm.jokes.RxJokeService;
 
 import javax.inject.Inject;
 
+import io.reactivex.Observable;
 import io.reactivex.Observer;
 import io.reactivex.annotations.NonNull;
 import io.reactivex.disposables.Disposable;
 import io.reactivex.functions.Function;
 import io.reactivex.schedulers.Schedulers;
+import io.reactivex.subjects.BehaviorSubject;
 
 /**
  * Created by johannesC on 2017/06/22.
@@ -19,8 +20,8 @@ import io.reactivex.schedulers.Schedulers;
 public class DefaultJokeViewModel implements JokeViewModel {
 
     private final RxJokeService rxJokeService;
-    private StateListener<JokeState> stateListener;
     private JokeState state;
+    private final BehaviorSubject<JokeState> jokeState = BehaviorSubject.create();
 
     @Inject
     public DefaultJokeViewModel(RxJokeService rxJokeService) {
@@ -29,9 +30,13 @@ public class DefaultJokeViewModel implements JokeViewModel {
     }
 
     @Override
-    public void attachStateListener(StateListener<JokeState> jokeStatesStateListener) {
-        stateListener = jokeStatesStateListener;
-        stateListener.onStateChange(state);
+    public void onSubscribe() {
+        jokeState.onNext(state);
+    }
+
+    @Override
+    public Observable<JokeState> observeState() {
+        return jokeState;
     }
 
     @Override
@@ -53,7 +58,7 @@ public class DefaultJokeViewModel implements JokeViewModel {
             state.resultText = "";
             state.progressBarVisible = true;
             state.currentState = JokePossibleStates.BUSY;
-            stateListener.onStateChange(state);
+            jokeState.onNext(state);
         }
 
         @Override
@@ -61,7 +66,7 @@ public class DefaultJokeViewModel implements JokeViewModel {
             state.resultText = norrisJokeDto.value;
             state.progressBarVisible = false;
             state.currentState = JokePossibleStates.NORMAL;
-            stateListener.onStateChange(state);
+            jokeState.onNext(state);
         }
 
         @Override
@@ -69,7 +74,7 @@ public class DefaultJokeViewModel implements JokeViewModel {
             state.resultText = t.toString();
             state.progressBarVisible = false;
             state.currentState = JokePossibleStates.ERROR;
-            stateListener.onStateChange(state);
+            jokeState.onNext(state);
         }
 
         @Override

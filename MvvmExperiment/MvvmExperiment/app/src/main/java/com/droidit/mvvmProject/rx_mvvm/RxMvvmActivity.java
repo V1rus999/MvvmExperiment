@@ -9,7 +9,6 @@ import android.widget.ProgressBar;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
-import com.droidit.domain.StateListener;
 import com.droidit.domain.rx_mvvm.JokePossibleStates;
 import com.droidit.domain.rx_mvvm.JokeState;
 import com.droidit.domain.rx_mvvm.JokeViewModel;
@@ -26,8 +25,12 @@ import butterknife.BindColor;
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
+import io.reactivex.android.schedulers.AndroidSchedulers;
+import io.reactivex.annotations.NonNull;
+import io.reactivex.disposables.Disposable;
+import io.reactivex.functions.Consumer;
 
-public class RxMvvmActivity extends AppCompatActivity implements StateListener<JokeState> {
+public class RxMvvmActivity extends AppCompatActivity {
 
     public static void start(Context context) {
         Intent starter = new Intent(context, RxMvvmActivity.class);
@@ -53,9 +56,10 @@ public class RxMvvmActivity extends AppCompatActivity implements StateListener<J
     @BindColor(R.color.normal)
     int normalColor;
 
-
     @Inject
     JokeViewModel viewModel;
+
+    private Disposable viewModelDisposable;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -63,7 +67,28 @@ public class RxMvvmActivity extends AppCompatActivity implements StateListener<J
         this.initializeInjector();
         setContentView(R.layout.activity_rx_mvvm);
         ButterKnife.bind(this);
-        viewModel.attachStateListener(this);
+
+        viewModelDisposable = viewModel.observeState()
+                .observeOn(AndroidSchedulers.mainThread())
+                .doOnSubscribe(new Consumer<Disposable>() {
+                    @Override
+                    public void accept(@NonNull Disposable disposable) throws Exception {
+                        viewModel.onSubscribe();
+                    }
+                })
+                .doOnNext(new Consumer<JokeState>() {
+                    @Override
+                    public void accept(@NonNull JokeState jokeState) throws Exception {
+                        if (!jokeState.resultText.isEmpty())
+                            rxmvvmResultTv.append(jokeState.resultText);
+
+                        rxmvvmJokesProgressbar.setVisibility(jokeState.progressBarVisible ? View.VISIBLE : View.INVISIBLE);
+
+                        rxmvvmJokesButton.setBackgroundColor(
+                                jokeState.currentState == JokePossibleStates.ERROR ? redColor :
+                                        (jokeState.currentState == JokePossibleStates.BUSY ? busyColor : normalColor));
+                    }
+                }).subscribe();
     }
 
     protected ApplicationComponent getApplicationComponent() {
@@ -78,6 +103,14 @@ public class RxMvvmActivity extends AppCompatActivity implements StateListener<J
     }
 
     @Override
+    protected void onDestroy() {
+        if (!viewModelDisposable.isDisposed()) {
+            viewModelDisposable.dispose();
+        }
+        super.onDestroy();
+    }
+
+    @Override
     public void finish() {
         super.finish();
         TransitionHelper.transition(this, TransitionHelper.slideInFromLeft());
@@ -86,19 +119,5 @@ public class RxMvvmActivity extends AppCompatActivity implements StateListener<J
     @OnClick(R.id.rxmvvm_jokes_button)
     public void onJokesButtonClicked() {
         viewModel.onJokesButtonClicked();
-    }
-
-    @Override
-    public void onStateChange(final JokeState jokeState) {
-        runOnUiThread(new Runnable() {
-            @Override
-            public void run() {
-                if (!jokeState.resultText.isEmpty()) rxmvvmResultTv.append(jokeState.resultText);
-                rxmvvmJokesProgressbar.setVisibility(jokeState.progressBarVisible ? View.VISIBLE : View.INVISIBLE);
-                rxmvvmJokesButton.setBackgroundColor(
-                        jokeState.currentState == JokePossibleStates.ERROR ? redColor :
-                                (jokeState.currentState == JokePossibleStates.BUSY ? busyColor : normalColor));
-            }
-        });
     }
 }

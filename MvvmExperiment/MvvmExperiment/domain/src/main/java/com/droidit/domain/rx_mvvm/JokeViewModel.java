@@ -1,13 +1,16 @@
 package com.droidit.domain.rx_mvvm;
 
-import com.droidit.domain.BaseViewModel;
-import com.droidit.domain.StateListener;
+import io.reactivex.Observable;
 
 /**
  * Created by johannesC on 2017/06/22.
  */
 
-public interface JokeViewModel extends BaseViewModel<StateListener<JokeState>> {
+public interface JokeViewModel {
+
+    void onSubscribe();
+
+    Observable<JokeState> observeState();
 
     void onJokesButtonClicked();
 }
