@@ -89,11 +89,16 @@ public class RxMvvmActivity extends AppCompatActivity implements StateListener<J
     }
 
     @Override
-    public void onStateChange(JokeState jokeState) {
-        if (!jokeState.resultText.isEmpty()) rxmvvmResultTv.append(jokeState.resultText);
-        rxmvvmJokesProgressbar.setVisibility(jokeState.progressBarVisible ? View.VISIBLE : View.INVISIBLE);
-        rxmvvmJokesButton.setBackgroundColor(
-                jokeState.currentState == JokePossibleStates.ERROR ? redColor :
-                        (jokeState.currentState == JokePossibleStates.BUSY ? busyColor : normalColor));
+    public void onStateChange(final JokeState jokeState) {
+        runOnUiThread(new Runnable() {
+            @Override
+            public void run() {
+                if (!jokeState.resultText.isEmpty()) rxmvvmResultTv.append(jokeState.resultText);
+                rxmvvmJokesProgressbar.setVisibility(jokeState.progressBarVisible ? View.VISIBLE : View.INVISIBLE);
+                rxmvvmJokesButton.setBackgroundColor(
+                        jokeState.currentState == JokePossibleStates.ERROR ? redColor :
+                                (jokeState.currentState == JokePossibleStates.BUSY ? busyColor : normalColor));
+            }
+        });
     }
 }

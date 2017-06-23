@@ -6,9 +6,10 @@ import com.droidit.domain.rx_mvvm.jokes.RxJokeService;
 
 import javax.inject.Inject;
 
+import io.reactivex.Observer;
 import io.reactivex.annotations.NonNull;
 import io.reactivex.disposables.Disposable;
-import io.reactivex.functions.Consumer;
+import io.reactivex.functions.Function;
 import io.reactivex.schedulers.Schedulers;
 
 /**
@@ -37,22 +38,43 @@ public class DefaultJokeViewModel implements JokeViewModel {
     public void onJokesButtonClicked() {
         rxJokeService.getJoke()
                 .subscribeOn(Schedulers.io())
-                .doOnSubscribe(new Consumer<Disposable>() {
+                .map(new Function<NorrisJokeDto, NorrisJokeDto>() {
                     @Override
-                    public void accept(@NonNull Disposable disposable) throws Exception {
-
+                    public NorrisJokeDto apply(@NonNull NorrisJokeDto norrisJokeDto) throws Exception {
+                        norrisJokeDto.value = norrisJokeDto.value + "\n\n";
+                        return norrisJokeDto;
                     }
-                })
-                .doOnNext(new Consumer<NorrisJokeDto>() {
-                    @Override
-                    public void accept(@NonNull NorrisJokeDto norrisJokeDto) throws Exception {
-                        System.out.println(norrisJokeDto.value);
-                    }})
-                .doOnError(new Consumer<Throwable>() {
-                    @Override
-                    public void accept(@NonNull Throwable throwable) throws Exception {
-                        System.out.println(throwable.toString());
-                    }
-                }).subscribe();
+                }).subscribe(obs);
     }
+
+    private final Observer<NorrisJokeDto> obs = new Observer<NorrisJokeDto>() {
+        @Override
+        public void onSubscribe(@NonNull Disposable d) {
+            state.resultText = "";
+            state.progressBarVisible = true;
+            state.currentState = JokePossibleStates.BUSY;
+            stateListener.onStateChange(state);
+        }
+
+        @Override
+        public void onNext(NorrisJokeDto norrisJokeDto) {
+            state.resultText = norrisJokeDto.value;
+            state.progressBarVisible = false;
+            state.currentState = JokePossibleStates.NORMAL;
+            stateListener.onStateChange(state);
+        }
+
+        @Override
+        public void onError(Throwable t) {
+            state.resultText = t.toString();
+            state.progressBarVisible = false;
+            state.currentState = JokePossibleStates.ERROR;
+            stateListener.onStateChange(state);
+        }
+
+        @Override
+        public void onComplete() {
+
+        }
+    };
 }
