@@ -2,8 +2,8 @@ package com.droidit.domain.login_mvvm.credential_server_view;
 
 import com.droidit.domain.DefaultCallback;
 import com.droidit.domain.DefaultValues;
-import com.droidit.domain.authentication.AuthService;
-import com.droidit.domain.login_mvvm.LoginStateListener;
+import com.droidit.domain.login_mvvm.authentication.AuthService;
+import com.droidit.domain.StateListener;
 import com.droidit.domain.login_mvvm.datastore.UserDataStore;
 import com.droidit.domain.threading.BackgroundExecutor;
 
@@ -24,7 +24,7 @@ public class LoginCredentialViewModel implements CredentialViewModel {
     private final AuthService authService;
     private final UserDataStore userDataStore;
     private CredentialState credentialState;
-    private LoginStateListener<CredentialState> stateListener;
+    private StateListener<CredentialState> stateListener;
 
     @Inject
     public LoginCredentialViewModel(final BackgroundExecutor backgroundExecutor, final UserDataStore userDataStore, final AuthService authService) {
@@ -35,7 +35,7 @@ public class LoginCredentialViewModel implements CredentialViewModel {
     }
 
     @Override
-    public void attachStateListener(LoginStateListener<CredentialState> stateListener) {
+    public void attachStateListener(StateListener<CredentialState> stateListener) {
         this.stateListener = stateListener;
         stateListener.onStateChange(credentialState);
     }

@@ -13,7 +13,7 @@ import android.widget.ProgressBar;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
-import com.droidit.domain.login_mvvm.LoginStateListener;
+import com.droidit.domain.StateListener;
 import com.droidit.domain.login_mvvm.ViewCompletionListener;
 import com.droidit.domain.login_mvvm.login_server_view.ServerState;
 import com.droidit.domain.login_mvvm.login_server_view.ServerViewModel;
@@ -34,7 +34,7 @@ import butterknife.OnClick;
  * Created by johannesC on 2017/06/15.
  */
 
-public class ServerView extends LinearLayout implements LoginStateListener<ServerState> {
+public class ServerView extends LinearLayout implements StateListener<ServerState> {
 
     @BindView(R.id.server_url_et)
     EditText serverUrlEt;

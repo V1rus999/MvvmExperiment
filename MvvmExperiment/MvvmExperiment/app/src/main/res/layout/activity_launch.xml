@@ -20,4 +20,10 @@
         android:layout_margin="16dp"
         android:text="Launch RxJava Activity" />
 
+    <Button
+        android:id="@+id/launch_rxmvvm_btn"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_margin="16dp"
+        android:text="Launch Rx MVVM Activity" />
 </LinearLayout>

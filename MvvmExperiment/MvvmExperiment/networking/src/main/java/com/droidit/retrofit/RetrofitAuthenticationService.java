@@ -1,7 +1,7 @@
 package com.droidit.retrofit;
 
 import com.droidit.domain.DefaultCallback;
-import com.droidit.domain.authentication.AuthService;
+import com.droidit.domain.login_mvvm.authentication.AuthService;
 
 import java.io.IOException;
 

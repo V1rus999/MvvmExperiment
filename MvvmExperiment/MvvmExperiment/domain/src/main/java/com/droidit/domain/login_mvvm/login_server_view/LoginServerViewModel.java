@@ -2,8 +2,8 @@ package com.droidit.domain.login_mvvm.login_server_view;
 
 import com.droidit.domain.DefaultCallback;
 import com.droidit.domain.DefaultValues;
-import com.droidit.domain.authentication.AuthService;
-import com.droidit.domain.login_mvvm.LoginStateListener;
+import com.droidit.domain.login_mvvm.authentication.AuthService;
+import com.droidit.domain.StateListener;
 import com.droidit.domain.login_mvvm.datastore.UserDataStore;
 import com.droidit.domain.threading.BackgroundExecutor;
 
@@ -23,7 +23,7 @@ public class LoginServerViewModel implements ServerViewModel {
     private final BackgroundExecutor backgroundExecutor;
     private final AuthService authService;
     private final UserDataStore userDataStore;
-    private LoginStateListener<ServerState> loginStateListener;
+    private StateListener<ServerState> stateListener;
     private ServerState serverState;
 
     @Inject
@@ -34,9 +34,9 @@ public class LoginServerViewModel implements ServerViewModel {
         serverState = new ServerState(DefaultValues.defaultUrl, "Next", false, NORMAL);
     }
 
-    public void attachStateListener(final LoginStateListener<ServerState> loginStateListener) {
-        this.loginStateListener = loginStateListener;
-        this.loginStateListener.onStateChange(serverState); //Default State
+    public void attachStateListener(final StateListener<ServerState> stateListener) {
+        this.stateListener = stateListener;
+        this.stateListener.onStateChange(serverState); //Default State
     }
 
     @Override
@@ -86,21 +86,21 @@ public class LoginServerViewModel implements ServerViewModel {
         serverState.progressBarVisible = true;
         serverState.loginButtonText = "Cancel";
         serverState.currentState = BUSY;
-        this.loginStateListener.onStateChange(serverState);
+        this.stateListener.onStateChange(serverState);
     }
 
     private void switchToNormalState() {
         serverState.progressBarVisible = false;
         serverState.loginButtonText = "Next";
         serverState.currentState = NORMAL;
-        this.loginStateListener.onStateChange(serverState);
+        this.stateListener.onStateChange(serverState);
     }
 
     private void switchToErrorState(final String message) {
         serverState.progressBarVisible = false;
         serverState.loginButtonText = message;
         serverState.currentState = ERROR;
-        this.loginStateListener.onStateChange(serverState);
+        this.stateListener.onStateChange(serverState);
     }
 
     private void switchToSuccessState() {
@@ -108,6 +108,6 @@ public class LoginServerViewModel implements ServerViewModel {
         serverState.loginButtonText = "Success!";
         serverState.currentState = SUCCESS;
         serverState.isFinished = true;
-        this.loginStateListener.onStateChange(serverState);
+        this.stateListener.onStateChange(serverState);
     }
 }

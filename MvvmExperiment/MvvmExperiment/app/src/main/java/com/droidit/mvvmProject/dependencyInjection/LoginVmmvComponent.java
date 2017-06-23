@@ -1,7 +1,7 @@
 package com.droidit.mvvmProject.dependencyInjection;
 
 import com.droidit.mvvmProject.login_mvvm.views.CredentialView;
-import com.droidit.mvvmProject.login_mvvm.views.LoginMvvmActivity;
+import com.droidit.mvvmProject.login_mvvm.views.MvvmActivity;
 import com.droidit.mvvmProject.login_mvvm.views.ServerView;
 
 import dagger.Component;
@@ -13,7 +13,7 @@ import dagger.Component;
 @Component(dependencies = ApplicationComponent.class, modules = {NetworkModule.class, ViewModelModule.class})
 public interface LoginVmmvComponent {
 
-    void inject(LoginMvvmActivity basicExampleActivity);
+    void inject(MvvmActivity basicExampleActivity);
 
     void inject(ServerView serverView);
 

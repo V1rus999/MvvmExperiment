@@ -13,7 +13,7 @@ import android.widget.ProgressBar;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
-import com.droidit.domain.login_mvvm.LoginStateListener;
+import com.droidit.domain.StateListener;
 import com.droidit.domain.login_mvvm.ViewCompletionListener;
 import com.droidit.domain.login_mvvm.credential_server_view.CredentialState;
 import com.droidit.domain.login_mvvm.credential_server_view.CredentialViewModel;
@@ -34,7 +34,7 @@ import butterknife.OnClick;
  * Created by johannesC on 2017/06/15.
  */
 
-public class CredentialView extends LinearLayout implements LoginStateListener<CredentialState> {
+public class CredentialView extends LinearLayout implements StateListener<CredentialState> {
 
     @BindView(R.id.credential_username_et)
     EditText credentialUsernameEt;

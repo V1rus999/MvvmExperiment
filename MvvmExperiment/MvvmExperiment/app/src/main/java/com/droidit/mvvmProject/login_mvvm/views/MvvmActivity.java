@@ -8,7 +8,7 @@ import android.os.Looper;
 import android.support.v7.app.AppCompatActivity;
 import android.view.View;
 
-import com.droidit.domain.login_mvvm.LoginStateListener;
+import com.droidit.domain.StateListener;
 import com.droidit.domain.login_mvvm.ViewCompletionListener;
 import com.droidit.domain.login_mvvm.login_main_view.LoginMainState;
 import com.droidit.domain.login_mvvm.login_main_view.LoginMainStates;
@@ -18,6 +18,7 @@ import com.droidit.mvvmProject.R;
 import com.droidit.mvvmProject.dependencyInjection.ApplicationComponent;
 import com.droidit.mvvmProject.dependencyInjection.DaggerLoginVmmvComponent;
 import com.droidit.mvvmProject.dependencyInjection.LoginVmmvComponent;
+import com.droidit.mvvmProject.util.TransitionHelper;
 import com.github.florent37.viewanimator.AnimationListener;
 import com.github.florent37.viewanimator.ViewAnimator;
 
@@ -26,11 +27,12 @@ import javax.inject.Inject;
 import butterknife.BindView;
 import butterknife.ButterKnife;
 
-public class LoginMvvmActivity extends AppCompatActivity implements LoginStateListener<LoginMainState> {
+public class MvvmActivity extends AppCompatActivity implements StateListener<LoginMainState> {
 
     public static void start(Context context) {
-        Intent starter = new Intent(context, LoginMvvmActivity.class);
+        Intent starter = new Intent(context, MvvmActivity.class);
         context.startActivity(starter);
+        TransitionHelper.transition(context, TransitionHelper.slideInFromRight());
     }
 
     @BindView(R.id.server_view)
@@ -66,6 +68,12 @@ public class LoginMvvmActivity extends AppCompatActivity implements LoginStateLi
         basicExampleComponent.inject(this);
     }
 
+    @Override
+    public void finish() {
+        super.finish();
+        TransitionHelper.transition(this, TransitionHelper.slideInFromLeft());
+    }
+
     private final ViewCompletionListener serverCompletionListener = new ViewCompletionListener() {
         @Override
         public void onDone() {
@@ -91,7 +99,7 @@ public class LoginMvvmActivity extends AppCompatActivity implements LoginStateLi
                     showCredential();
 
                 if (serverLoginState.isFinished) {
-                    LoginMvvmActivity.this.finish();
+                    MvvmActivity.this.finish();
                 }
             }
         });
