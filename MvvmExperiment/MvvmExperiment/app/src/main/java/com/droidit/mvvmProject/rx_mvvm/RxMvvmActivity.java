@@ -91,6 +91,11 @@ public class RxMvvmActivity extends AppCompatActivity {
                 }).subscribe();
     }
 
+    @OnClick(R.id.rxmvvm_jokes_button)
+    public void onJokesButtonClicked() {
+        viewModel.onJokesButtonClicked();
+    }
+
     protected ApplicationComponent getApplicationComponent() {
         return ((DefaultApplication) this.getApplication()).getMainComponent();
     }
@@ -114,10 +119,5 @@ public class RxMvvmActivity extends AppCompatActivity {
     public void finish() {
         super.finish();
         TransitionHelper.transition(this, TransitionHelper.slideInFromLeft());
-    }
-
-    @OnClick(R.id.rxmvvm_jokes_button)
-    public void onJokesButtonClicked() {
-        viewModel.onJokesButtonClicked();
     }
 }
