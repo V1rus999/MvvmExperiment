@@ -10,6 +10,7 @@ import java.io.IOException;
 import javax.inject.Inject;
 
 import io.reactivex.Observable;
+import io.reactivex.Single;
 import retrofit2.Call;
 import retrofit2.Response;
 
@@ -47,5 +48,10 @@ public class RetrofitNorrisJokeService implements NorrisJokeService, RxJokeServi
     @Override
     public Observable<NorrisJokeDto> getJoke() {
         return norrisJokeApi.getNorrisJokeRx();
+    }
+
+    @Override
+    public Single<NorrisJokeDto> getJokeSingle() {
+        return norrisJokeApi.getNorrisJokeRxSingle();
     }
 }

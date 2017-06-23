@@ -3,6 +3,7 @@ package com.droidit.retrofit;
 import com.droidit.domain.rx_java.NorrisJokeDto;
 
 import io.reactivex.Observable;
+import io.reactivex.Single;
 import retrofit2.Call;
 import retrofit2.http.GET;
 
@@ -17,4 +18,7 @@ public interface NorrisJokeApi {
 
     @GET("jokes/random")
     Observable<NorrisJokeDto> getNorrisJokeRx();
+
+    @GET("jokes/random")
+    Single<NorrisJokeDto> getNorrisJokeRxSingle();
 }

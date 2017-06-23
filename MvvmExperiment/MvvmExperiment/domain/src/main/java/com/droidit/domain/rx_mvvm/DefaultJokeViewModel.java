@@ -6,7 +6,7 @@ import com.droidit.domain.rx_mvvm.jokes.RxJokeService;
 import javax.inject.Inject;
 
 import io.reactivex.Observable;
-import io.reactivex.Observer;
+import io.reactivex.SingleObserver;
 import io.reactivex.annotations.NonNull;
 import io.reactivex.disposables.Disposable;
 import io.reactivex.functions.Function;
@@ -41,7 +41,7 @@ public class DefaultJokeViewModel implements JokeViewModel {
 
     @Override
     public void onJokesButtonClicked() {
-        rxJokeService.getJoke()
+        rxJokeService.getJokeSingle()
                 .subscribeOn(Schedulers.io())
                 .map(new Function<NorrisJokeDto, NorrisJokeDto>() {
                     @Override
@@ -49,10 +49,10 @@ public class DefaultJokeViewModel implements JokeViewModel {
                         norrisJokeDto.value = norrisJokeDto.value + "\n\n";
                         return norrisJokeDto;
                     }
-                }).subscribe(obs);
+                }).subscribe(sObs);
     }
 
-    private final Observer<NorrisJokeDto> obs = new Observer<NorrisJokeDto>() {
+    private final SingleObserver<NorrisJokeDto> sObs = new SingleObserver<NorrisJokeDto>() {
         @Override
         public void onSubscribe(@NonNull Disposable d) {
             state.resultText = "";
@@ -62,7 +62,7 @@ public class DefaultJokeViewModel implements JokeViewModel {
         }
 
         @Override
-        public void onNext(NorrisJokeDto norrisJokeDto) {
+        public void onSuccess(@NonNull NorrisJokeDto norrisJokeDto) {
             state.resultText = norrisJokeDto.value;
             state.progressBarVisible = false;
             state.currentState = JokePossibleStates.NORMAL;
@@ -70,16 +70,11 @@ public class DefaultJokeViewModel implements JokeViewModel {
         }
 
         @Override
-        public void onError(Throwable t) {
-            state.resultText = t.toString();
+        public void onError(@NonNull Throwable e) {
+            state.resultText = e.toString();
             state.progressBarVisible = false;
             state.currentState = JokePossibleStates.ERROR;
             jokeState.onNext(state);
-        }
-
-        @Override
-        public void onComplete() {
-
         }
     };
 }
